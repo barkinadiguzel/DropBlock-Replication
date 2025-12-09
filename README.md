@@ -1,2 +1,98 @@
-# DropBlock-Replication
-DropBlock-Replication is a project structure built to translate the DropBlock concept into a practical model. No training or testing is involved; the focus is purely on implementing the theoretical DropBlock logic within a convolutional network.
+# 🌸 DropBlock PyTorch Implementation
+
+This repository contains a PyTorch implementation of **DropBlock**, a structured dropout method for **convolutional networks**. The goal is to regularize spatially correlated feature maps by **dropping contiguous blocks** instead of individual units, improving robustness and generalization.  
+
+- DropBlock applied **within convolutional layers** and optionally in skip connections.  
+- Gradually increase dropped units during training for better performance.  
+- Architecture:  
+**Input → Backbone with DropBlock → FPN-like feature processing → Segmentation Head → Output**  
+
+**Paper reference:** [DropBlock: A Regularization Method for Convolutional Networks](https://arxiv.org/abs/1810.12890) 🐻
+
+---
+
+## 🖼 Overview – DropBlock Architecture
+
+![Figure 1](images/figmix.jpg)  
+*Figure 1:* Input image and feature maps showing semantic regions.  
+*Figure 2:* DropBlock mask expands each zero to a contiguous block of size `block_size × block_size`.  
+*Figure 6:* Feature map after DropBlock showing areas forced to learn new representations.
+
+---
+
+## 🧮 Key Mathematical Idea
+
+![Math Concept](images/math.jpg)  
+
+- Let $$(A \in \mathbb{R}^{C \times H \times W}\)$$ be the feature map.  
+- Create a binary mask $$(M\)$$ with probability $$(\gamma\)$$:  
+
+$$
+M_{i,j} \sim \text{Bernoulli}(\gamma)
+$$
+
+- Expand each zero in \(M\) to a block of size \( \text{block size} \times \text{block size} \):  
+
+$$
+A' = A \odot \text{DropBlockMask}(M, \text{block size})
+$$
+  
+- Normalize to preserve feature magnitude:  
+
+$$
+A' = A' \times \frac{\text{total elements}}{\text{sum of ones in mask}}
+$$
+
+**Example mask (7×7, block size = 2, keep\_prob = 0.9):**
+
+$$
+M = 
+\begin{bmatrix}
+1 & 1 & 1 & 1 & 1 & 1 & 1 \\
+1 & 0 & 0 & 1 & 1 & 1 & 1 \\
+1 & 0 & 0 & 1 & 1 & 1 & 1 \\
+1 & 1 & 1 & 1 & 1 & 1 & 1 \\
+1 & 1 & 1 & 0 & 0 & 1 & 1 \\
+1 & 1 & 1 & 0 & 0 & 1 & 1 \\
+1 & 1 & 1 & 1 & 1 & 1 & 1
+\end{bmatrix}
+$$
+
+- `1` → keep  
+- `0` → drop  
+
+---
+
+## 🏗️ Model Architecture
+
+```bash
+DropBlock-Replication/
+│
+├── src/
+│   ├── layers/
+│   │   ├── conv_block.py             # Conv + BN + ReLU with optional DropBlock
+│   │   ├── fpn_block.py              # FPN-like feature combination (upsample + lateral conv)
+│   │   └── output_seg_head.py        # Segmentation head (2 conv layers + output)
+│   │
+│   ├── modules/
+│   │   ├── backbone_resnet.py        # ResNet backbone with DropBlock support
+│   │   └── roi_processor.py          # Optional feature processor
+│   │
+│   ├── model/
+│   │   └── dropblock_model.py        # Full pipeline: backbone → FPN → segmentation head
+│   │
+│   └── schedule_dropblock.py         # DropBlock scheduler for dynamic keep_prob
+│
+├── images/
+│   ├── figures.jpg                    # Figures 1,2,6 illustrating DropBlock
+│   └── math.jpg                       # Key mathematical idea and mask example
+│
+├── requirements.txt
+└── README.md
+```
+---
+
+
+## 🔗 Feedback
+
+For questions or feedback, contact: [barkin.adiguzel@gmail.com](mailto:barkin.adiguzel@gmail.com)
