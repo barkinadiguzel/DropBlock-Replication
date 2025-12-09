@@ -1,0 +1,5 @@
+# Hyperparameters
+BLOCK_SIZE = 3
+KEEP_PROB = 0.9
+NUM_CLASSES = 21
+INPUT_SIZE = (224, 224)
