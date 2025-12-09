@@ -14,9 +14,16 @@ This repository contains a PyTorch implementation of **DropBlock**, a structured
 ## 🖼 Overview – DropBlock Architecture
 
 ![Figure 1](images/figmix.jpg)  
-*Figure 1:* Input image and feature maps showing semantic regions.  
-*Figure 2:* DropBlock mask expands each zero to a contiguous block of size `block_size × block_size`.  
-*Figure 6:* Feature map after DropBlock showing areas forced to learn new representations.
+
+This overview summarizes the DropBlock pipeline across key stages of the network:
+
+- **Input:** Original image is passed through the network.  
+- **Backbone:** Feature maps are extracted using a ResNet backbone with DropBlock applied in convolutional layers.  
+- **Feature Processing:** FPN-like module combines features across scales to enhance representation.  
+- **DropBlock Application:** Contiguous blocks of activations are dropped according to a scheduled probability, forcing the network to learn diverse features.  
+- **Segmentation Head:** Processed features are passed through 2 convolution layers to produce the final segmentation map.  
+
+The model enforces robustness by preventing reliance on local correlated activations, improving generalization for segmentation tasks.
 
 ---
 
