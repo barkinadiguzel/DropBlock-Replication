@@ -77,22 +77,25 @@ DropBlock-Replication/
 │
 ├── src/
 │   ├── layers/
-│   │   ├── conv_block.py             # Conv + BN + ReLU with optional DropBlock
-│   │   ├── fpn_block.py              # FPN-like feature combination (upsample + lateral conv)
-│   │   └── output_seg_head.py        # Segmentation head (2 conv layers + output)
+│   │   ├── conv_block.py           # Conv + BN + ReLU + optional DropBlock hook
+│   │   ├── dropblock_layer.py      # only DropBlock regularizer
+│   │   ├── residual_block.py
+│   │   ├── fpn_block.py
+│   │   └── output_seg_head.py
 │   │
 │   ├── modules/
-│   │   ├── backbone_resnet.py        # ResNet backbone with DropBlock support
-│   │   └── roi_processor.py          # Optional feature processor
+│   │   ├── backbone_resnet.py
+│   │   ├── feature_processor.py    # (previous roi_processor)
+│   │   └── schedule_dropblock.py   # scheduler should stay here
 │   │
 │   ├── model/
-│   │   └── dropblock_model.py        # Full pipeline: backbone → FPN → segmentation head
+│   │   └── dropblock_model.py
 │   │
-│   └── schedule_dropblock.py         # DropBlock scheduler for dynamic keep_prob
+│   └── __init__.py                # boş bile olsa koy
 │
 ├── images/
-│   ├── figures.jpg                    # Figures 1,2,6 illustrating DropBlock
-│   └── math.jpg                       # Key mathematical idea and mask example
+│   ├── figures.jpg
+│   └── math.jpg
 │
 ├── requirements.txt
 └── README.md
