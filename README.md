@@ -91,7 +91,7 @@ DropBlock-Replication/
 │   ├── model/
 │   │   └── dropblock_model.py
 │   │
-│   └── __init__.py                # boş bile olsa koy
+│   └── __init__.py                
 │
 ├── images/
 │   ├── figures.jpg
